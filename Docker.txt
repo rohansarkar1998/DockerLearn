@@ -1,0 +1,391 @@
+Hosted in Ansible_hostClone/ Docker 
+
+ Install docker sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin 
+
+Systemctl start docker 
+
+Systemctl enable docker 
+
+Systemctl status docker 
+
+Or: 
+
+ 
+
+Sudo apt-get update 
+
+sudo apt install docker-ce docker-ce-cli containerd.io 
+
+ 
+
+ 
+
+rohansarkar007  Rohan007@1998    
+
+ 
+
+Now to test docker go to hub.docker find image whalesay and peast the run command 
+
+ 
+
+Docker run nginx   [if nginx image present run it otherwise download and run] 
+
+ 
+
+Docker ps    [show running container] 
+
+ 
+
+Docker ps –a [show all running and stoppend container] 
+
+ 
+
+Docker stop container name/ID  [stop container] 
+
+ 
+
+Docker rm container name      [remove container permanently] 
+
+ 
+
+Docker images  [show all image] 
+
+ 
+
+ALL CONTAINER MUST BE STOP BEFORE REMOVE A IMAGE 
+
+ 
+
+Docker pull ngnix  [only pull image not create container] 
+
+ 
+
+Docker run –d ngnix   [normally run will not execute in background mode using d we can run it on backgrround mode] 
+
+ 
+
+For os level image it will stop immedeatly. 
+
+ 
+
+Docker run radis:4.0   [run specific version] 
+
+This is called tag if tag is not mention docker take tag as leatest 
+
+ 
+
+Docker run –it /web/code   [Run in a inteactive way] 
+
+ 
+
+    12.  docker run –p 80:5000 /web/code     [will be exposed app port: internel container port] 
+
+ 
+
+Volume mapping   
+
+When we create a docker a container it has it own file system. Suppose we doenload a mysql image and create a container then all data related to mysql store in a file when the container delete all data also delete to stop this we map volume 
+
+ 
+
+Docker run –v /opt/mydir: /var/lib/mysql 
+
+ 
+
+Docker inspect container name  (show container details in json format also show internel IP) 
+
+Docker log container name 
+
+Docker run nginx sleep 50   [This sleep the container for 50 sec] 
+
+ docker run timer  [print time] 
+
+Jenkins can also download as docker image 
+
+We have to make port mapping for this to access it outside the local host / internet 
+
+  
+
+ 
+
+ 
+
+ 
+
+CREATING DOCKER IMAGE: 
+
+ 
+
+TEST: 
+
+ 
+
+Docker run –it centos bash 
+
+Dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos 
+
+Dnf distro-sync 
+
+ 
+
+[Basically this will download a new centos machine no all similer to centos ] 
+
+ 
+
+Yum install java-11-openjdk-devel 
+
+Peast code in /opt    vi /opt/ArraySum.java 
+
+ 
+
+ 
+
+Steps; 
+
+ 
+
+Create a blank folder 
+
+Create a Dockerfile and one Hello.java 
+
+In Dockerfile run the below code 
+
+Then docker build . 
+
+This will create a hello world iamge 
+
+Docker images   This show all image 
+
+Docker run image id   create container 
+
+ 
+
+DOCKER FILE 
+
+ 
+
+ 
+
+Dockerfile 
+
+//Structure ->Instruction   argument 
+
+ 
+
+FROM centos  //os version 
+
+RUN dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos --assumeyes 
+
+RUN dnf distro-sync --assumeyes 
+
+RUN yum install java-11-openjdk-devel –assumeyes    // using RUN we can execute linux command 
+
+WORKDIR /opt/hello-world   //dir where the code is there 
+
+COPY ArrayTest21.java /opt/hello-world  //copy code to the dir 
+
+RUN javac ArrayTest21.java   //compile  
+
+ENTRYPOINT java ArrayTest21   // output 
+
+ 
+
+Build 
+
+Docker build .    // Run Container (.) current directory 
+
+Folder: 
+
+[root@osboxes JavaContainer]# ls 
+
+ArrayTest21.java  Dockerfile 
+
+Tagging/ProvideName: 
+
+docker build . -t javahelloworldcontainer 
+
+ 
+
+Create container 
+
+Docker run image id 
+
+ 
+
+Docker push to Docker Hub 
+
+ 
+
+docker build . -t rohansarkar007/helloworldjavacontainer  // Dockerhub user id 
+
+ docker login  // provide docker hub userID and password 
+
+docker push rohansarkar007/helloworldjavacontainer  // push to docker hub 
+
+In docker hub in my profile we can find this 
+
+ 
+
+Entrypint VS cmd: 
+
+In case of entrypoint the command that we put in docker will append but for cmd the command that we put that overrite 
+
+ENTRYPOINT ["sleep"] 
+
+Docker run image: 5   -> sleep 5 
+
+Cmd ["sleep" "10"] 
+
+Docker run image: sleep 5  -> sleep 5 
+
+ 
+
+ENTRYPOINT ["sleep"] 
+
+CMD ["5"] 
+
+Docker run 10   -> sleep 10 
+
+Docker run   -> sleep 5 
+
+ 
+
+DOCKER COMPOSE 
+
+https://github.com/dockersamples/example-voting-app  source code 
+
+Download code here into linux machine 
+
+Here first build a image of voting app [inside this there in a docker file] 
+
+[root@osboxes vote]# docker build . -t voting-app      // create image 
+
+docker run -p 5000:80 voting-app    // build container from image 
+
+If in browser we type ip:5000 it show output 
+
+docker run --name=redis redis  // Run a radis container and provide the name redis as this name                                                                  mention in the .py file 
+
+docker run -d -p 5001:80 --link redis:redis voting-app  //link radis with vote.py and run in 5001 port 
+
+docker run --name=db -e POSTGRES_PASSWORD=mysecrectpasswoed -d postgres:9.4    //download postfres and provide name  POSTGRES_PASSWORD have to mention 
+
+Docker build . -t worker-app   // create docker image 
+
+Docker run –d –link redis:redis –link db:db worker-app   //create container 
+
+docker build . -t result-app 
+
+Docker run –link db:db –p 5001:80 result-app 
+
+Is suppose a html page using a db then we have to create a image of db first then we create the web page 
+
+ 
+
+DOCKER COMPOSE: 
+
+Download docker compose 
+
+Create vi docker-compose.yml 
+
+Db:     // Name  
+
+     Image:  //name of image [db,voting-app] 
+
+      Ports: 
+
+             - 5000:80 
+
+       Link: 
+
+             - redis 
+
+ 
+
+ 
+
+redis: 
+
+    image: redis  
+
+db: 
+
+    image: postgres 
+
+    restart: always 
+
+    environment: 
+
+      POSTGRES_PASSWORD: 
+
+ 
+
+vote: 
+
+    image: voting-app 
+
+    ports: 
+
+       - 5000:80 
+
+    links: 
+
+       - redis 
+
+worker: 
+
+    image: worker-app 
+
+    links: 
+
+       - db 
+
+       - redius 
+
+  
+
+result: 
+
+    image: result-app 
+
+    ports: 
+
+       - 5001:80 
+
+    links: 
+
+       - db 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+  
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+~ 
+
+   
+
+ 
+
+ 
+
+ 
